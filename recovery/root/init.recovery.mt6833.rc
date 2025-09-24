@@ -1,0 +1,123 @@
+import /init.mitee.rc
+import /init.vibrator.rc
+import /init.hals.rc
+
+# Set SELinux to Permissive
+on early-init
+    write /sys/fs/selinux/enforce 0
+
+on init
+    setprop sys.usb.configfs 1
+    setprop sys.usb.controller "musb-hdrc"
+    setprop sys.usb.ffs.aio_compat 1
+    export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
+    setprop crypto.ready 1
+
+on fs
+    install_keyring
+
+# We need vold early for metadata encryption
+on early-fs
+    start vold
+
+on late-fs
+    # Mount RW partitions which need run fsck
+    mount_all /first_stage_ramdisk/fstab.mt6833 --late
+
+on post-fs
+    start vendor.boot-default
+
+    # Support A/B feature for EMMC and UFS boot region
+    wait /dev/block/mmcblk0boot0 2
+    symlink /dev/block/sda /dev/block/mmcblk0boot0
+    symlink /dev/block/sdb /dev/block/mmcblk0boot1
+    symlink /dev/block/mmcblk0boot0 /dev/block/platform/bootdevice/by-name/preloader_a
+    symlink /dev/block/mmcblk0boot1 /dev/block/platform/bootdevice/by-name/preloader_b
+
+    # Support A/B feature for combo emmc and ufs OTA update
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/platform/bootdevice/by-name/preloader_emmc_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/platform/bootdevice/by-name/preloader_emmc_b
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/platform/bootdevice/by-name/preloader_ufs_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/platform/bootdevice/by-name/preloader_ufs_b
+
+    # Support A/B feature for combo emmc and ufs OTA update
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/by-name/preloader_emmc_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/by-name/preloader_emmc_b
+    symlink /dev/block/platform/bootdevice/by-name/preloader_a /dev/block/by-name/preloader_ufs_a
+    symlink /dev/block/platform/bootdevice/by-name/preloader_b /dev/block/by-name/preloader_ufs_b
+
+    # Fix flashing stock xiaomi recovery zip
+    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
+
+    symlink /dev/block/platform/bootdevice /dev/block/bootdevice
+
+    exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
+    start mtk.plpath.utils.link
+
+# Services
+service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
+    user root
+    group root
+    oneshot
+    disabled
+    seclabel u:r:recovery:s0
+
+service keymint-mitee /vendor/bin/hw/android.hardware.security.keymint@3.0-service.mitee
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+service vendor.gatekeeper-mitee /vendor/bin/hw/android.hardware.gatekeeper-service.mitee
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+service load-touch-module /sbin/sh /system/bin/load-touch-module.sh
+    user root
+    group root
+    oneshot
+    disabled
+    seclabel u:r:recovery:s0
+
+#####
+
+on property:crypto.ready=1
+    start keymint-mitee
+
+on property:hwservicemanager.ready=true
+    start keymint-mitee
+    start vendor.gatekeeper-mitee
+
+on property:ro.crypto.state=unsupported
+    stop keymint-mitee
+    stop vendor.gatekeeper-mitee
+    stop tee-supplicant
+    stop miteelog
+    
+on property:ro.crypto.state=unencrypted
+    stop keymint-mitee
+    stop vendor.gatekeeper-mitee
+    stop tee-supplicant
+    stop miteelog
+
+on property:twrp.decrypt.done=true
+    stop keymint-mitee
+    stop vendor.gatekeeper-mitee
+    stop tee-supplicant
+    stop miteelog
+
+on property:crypto.ready=0
+    stop keymint-mitee
+    stop vendor.gatekeeper-mitee
+    stop tee-supplicant
+    stop miteelog
+
+on property:twrp.modules.loaded=true
+    start load-touch-module
+
+on boot
+    start vendor.health-default
+    setprop sys.usb.config adb
