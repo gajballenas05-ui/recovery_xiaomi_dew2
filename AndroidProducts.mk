@@ -15,4 +15,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/twrp_gold.mk
+    $(LOCAL_DIR)/twrp_dew.mk

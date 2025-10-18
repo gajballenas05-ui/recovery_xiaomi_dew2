@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-DEVICE_PATH := device/xiaomi/gold
+DEVICE_PATH := device/xiaomi/dew
 
 # Configure base.mk
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
@@ -38,7 +38,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_ven
 $(call inherit-product, vendor/twrp/config/common.mk)
 
 # some OrangeFox-specific settings
-$(call inherit-product, $(DEVICE_PATH)/fox_gold.mk)
+$(call inherit-product, $(DEVICE_PATH)/fox_dew.mk)
 
 # API
 PRODUCT_SHIPPING_API_LEVEL := 31
@@ -137,14 +137,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     mtk_plpath_utils \
     mtk_plpath_utils.recovery
-
-# Copy fstab
-PRODUCT_COPY_FILES += \
-    $(DEVICE_PATH)/fstab.mt6833:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.mt6833
-
-# Otacert
-PRODUCT_EXTRA_RECOVERY_KEYS += \
-    $(DEVICE_PATH)/security/miui_releasekey
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += $(DEVICE_PATH)

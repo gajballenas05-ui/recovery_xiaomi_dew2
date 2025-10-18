@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-DEVICE_PATH := device/xiaomi/gold
+DEVICE_PATH := device/xiaomi/dew
 
 # Architecture
 TARGET_ARCH := arm64
@@ -32,7 +32,7 @@ TARGET_2ND_CPU_VARIANT := generic
 TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a55
 
 # Assertation
-TARGET_OTA_ASSERT_DEVICE := gold
+TARGET_OTA_ASSERT_DEVICE := dew
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := mt6833
@@ -190,10 +190,5 @@ TW_NO_HAPTICS := true
 # Indicator
 #TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone9/temp"
 
-# init_boot ramdisk
-BOARD_VENDOR_RAMDISK_FRAGMENTS := init_boot
-BOARD_VENDOR_RAMDISK_FRAGMENT.init_boot.PREBUILT := $(DEVICE_PATH)/ramdisk.init_boot.lz4
-BOARD_VENDOR_RAMDISK_FRAGMENT.init_boot.MKBOOTIMG_ARGS := --ramdisk_type platform
-
 # Version
-TW_DEVICE_VERSION := gold-A15-1
+TW_DEVICE_VERSION := dew-r1
