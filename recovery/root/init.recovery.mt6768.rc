@@ -23,6 +23,13 @@ service vendor.keymint-beanpod /vendor/bin/hw/android.hardware.security.keymint@
     oneshot
     seclabel u:r:recovery:s0
 
+service load-touch-module /sbin/sh /system/bin/load-touch-module.sh
+    user root
+    group root
+    oneshot
+    disabled
+    seclabel u:r:recovery:s0
+
 on property:crypto.ready=1
     start vendor.keymint-beanpod
 
@@ -53,3 +60,4 @@ on property:crypto.ready=0
 on boot
     start boot-hal-1-2
     start health-hal-2-1
+    start load-touch-module
