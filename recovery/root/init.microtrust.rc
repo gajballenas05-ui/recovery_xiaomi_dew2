@@ -20,12 +20,13 @@ service teei_daemon /vendor/bin/teei_daemon \
     -t 85f630e0f0964c5fa2cc268ce04e3da3 \
     -t 98fb95bcb4bf42d26473eae48690d7ea \
     -t 7b66512021214487ba710a51d7ea78fe \
-    -t 09010000000000000000000000000000
+    -t 09010000000000000000000000000000 \
+    -t 86f623f6a2994dfdb560ffd3e5a62c29
     class core
     user system
     group system
     disabled
-    # eraselk: 20250405: add seclabel
+    capabilities SYS_RAWIO
     seclabel u:r:recovery:s0
 
 on boot
@@ -208,6 +209,10 @@ on post-fs
     restorecon_recursive /vendor/persist
 
 on fs
+    chown system system /mnt/vendor/persist
+    chmod 0771 /mnt/vendor/persist
+    restorecon /mnt/vendor/persist
+
     chmod 0660 /dev/teei_client
     chown system system /dev/teei_client
     chmod 0660 /dev/teei_config
@@ -222,6 +227,8 @@ on fs
     chown system drmrpc /dev/ut_keymaster
     chmod 0660 /dev/ut_keymaster
     # rpmb device
+    chmod 0660 /dev/0:0:0:49476
+    chown system system /dev/0:0:0:49476
     chmod 0660 /dev/rpmb0
     chown system system /dev/rpmb0
     chmod 0660 /dev/mmcblk0rpmb
@@ -240,3 +247,4 @@ on property:vendor.crypto.fake_encrypt=1 && property:vold.post_fs_data_done=1
 
 on post-fs-data
     setprop vendor.soter.teei.logini "start"
+

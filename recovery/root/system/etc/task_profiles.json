@@ -173,14 +173,14 @@
     },
 // MIUI ADD: Performance_SpeedUI
     {
-      "Name": "UiPerformance",
+      "Name": "MISFPerformance",
       "Actions": [
         {
           "Name": "JoinCgroup",
           "Params":
           {
             "Controller": "cpu",
-            "Path": "ui"
+            "Path": "misf"
           }
         }
       ]
@@ -208,45 +208,6 @@
           {
             "Controller": "cpu",
             "Path": "camera-daemon"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "CameraProcessCapacityLow",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpuset",
-            "Path": "camera-background"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "CameraProcessCapacityLower",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpuset",
-            "Path": "camera-background/background"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "CameraProcessCapacityLowest",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpuset",
-            "Path": "camera-background/limit"
           }
         }
       ]
@@ -448,16 +409,29 @@
         }
       ]
     },
+    {
+        "Name": "MultisenceCapacityLow",
+        "Actions": [
+          {
+            "Name": "JoinCgroup",
+            "Params":
+            {
+              "Controller": "cpuset",
+              "Path": "multisence-unfocus"
+            }
+          }
+        ]
+      },
 // MIUI ADD: Performance_SpeedUI
     {
-      "Name": "ProcessCapacityUI",
+      "Name": "ProcessCapacityMISF",
       "Actions": [
         {
           "Name": "JoinCgroup",
           "Params":
           {
             "Controller": "cpuset",
-            "Path": "ui"
+            "Path": "misf"
           }
         }
       ]
@@ -693,6 +667,45 @@
     },
     // MIUI ADD: Performance_MemoryEnhance
     {
+      "Name": "MemoryProtectedProcess",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "memory",
+            "Path": "protected-app"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "MemoryProtectedProcess",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "memory",
+            "Path": "protected-app"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "MemoryProtectedProcess",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "memory",
+            "Path": "protected-app"
+          }
+        }
+      ]
+    },
+    {
       "Name": "MemoryFreezeProcess",
       "Actions": [
         {
@@ -737,12 +750,6 @@
       "Name": "SCHED_SP_RT_APP",
       "Profiles": [ "RealtimePerformance", "MaxIoPriority", "TimerSlackNormal" ]
     },
-// MIUI ADD: Performance_SpeedUI
-    {
-      "Name": "SCHED_SP_UI",
-      "Profiles": [ "UiPerformance" ]
-    },
-// END Performance_SpeedUI
     {
       "Name": "CPUSET_SP_DEFAULT",
       "Profiles": [ "TimerSlackNormal" ]
@@ -768,6 +775,10 @@
       "Profiles": [ "ServiceCapacityRestricted", "TimerSlackNormal" ]
     },
     {
+        "Name": "CPUSET_SP_MULTISENCE_UNFOCUS",
+        "Profiles": [ "MultisenceCapacityLow" ]
+    },
+    {
       "Name": "Dex2OatBootComplete",
       "Profiles": [ "Dex2oatPerformance", "LowIoPriority", "TimerSlackHigh" ]
     },
@@ -778,25 +789,6 @@
     {
       "Name": "OtaProfiles",
       "Profiles": [ "ServiceCapacityLow", "LowIoPriority", "HighEnergySaving" ]
-    },
-    {
-      "Name": "CPUSET_SP_CAMERA_BACKGROUND",
-      "Profiles": [ "CameraProcessCapacityLow"]
-    },
-    {
-      "Name": "CPUSET_SP_CAMERA_LOWER_BACKGROUND",
-      "Profiles": [ "CameraProcessCapacityLower"]
-    },
-    {
-      "Name": "CPUSET_SP_CAMERA_LIMIT_BACKGROUND",
-      "Profiles": [ "HighEnergySaving", "CameraProcessCapacityLowest", "LowIoPriority", "TimerSlackHigh" ]
-// MIUI MOD: Performance_SpeedUI
-//  }
-    },
-    {
-      "Name": "CPUSET_SP_UI",
-      "Profiles": [ "ProcessCapacityUI", "UiPerformance" ]
     }
-// END Performance_SpeedUI
   ]
 }
