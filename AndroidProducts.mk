@@ -15,4 +15,10 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/fox_dew.mk
+    $(LOCAL_DIR)/fox_dew.mk \
+    $(LOCAL_DIR)/twrp_dew.mk
+
+COMMON_LUNCH_CHOICES := \
+    fox_dew-eng \
+    twrp_dew-eng
+

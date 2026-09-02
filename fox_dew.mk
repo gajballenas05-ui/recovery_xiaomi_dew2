@@ -1,22 +1,28 @@
 #
-#	This file is part of the OrangeFox Recovery Project
-# 	Copyright (C) 2024-2025 The OrangeFox Recovery Project
+# Copyright (C) 2025 The TWRP Open Source Project
 #
-#	OrangeFox is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation, either version 3 of the License, or
-#	any later version.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-#	OrangeFox is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-# 	This software is released under GPL version 3 or any later version.
-#	See <http://www.gnu.org/licenses/>.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
-# 	Please maintain this if you use this script or any part of it
-#
+
+# Device specific configs
+$(call inherit-product, device/xiaomi/dew/device.mk)
+
+# Device identifier
+PRODUCT_DEVICE := dew
+PRODUCT_NAME := fox_dew
+PRODUCT_BRAND := Redmi
+PRODUCT_MODEL := Redmi 15C
+PRODUCT_MANUFACTURER := Xiaomi
 
 # maintainer
 OF_MAINTAINER := ass_hole
@@ -62,5 +68,4 @@ OF_LOOP_DEVICE_ERRORS_TO_LOG := 1
 
 # lz4 compression
 OF_USE_LZ4_COMPRESSION := 1
-#
 
