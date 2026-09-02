@@ -15,4 +15,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/twrp_dew.mk
+    $(LOCAL_DIR)/fox_dew.mk
