@@ -6,11 +6,11 @@ on:
       MANIFEST_BRANCH:
         description: 'OrangeFox Manifest Branch (e.g. 12.1, 14.1, 11.0)'
         required: true
-        default: '12.1'
+        default: '14.1'
         type: choice
         options:
-          - '12.1'
           - '14.1'
+          - '12.1'
           - '11.0'
       BUILD_TARGET:
         description: 'Build Target'
@@ -19,15 +19,26 @@ on:
         type: choice
         options:
           - 'fox_dew-eng'
+          - 'twrp_dew-eng'
           - 'orangefox_dew-eng'
           - 'omni_dew-eng'
-          - 'twrp_dew-eng'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Maximize Build Space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 2048
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+
       - name: Checkout Device Tree
         uses: actions/checkout@v4
 
@@ -36,9 +47,14 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /opt/hostedtoolcache
+          sudo rm -rf /usr/share/swift
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /usr/lib/jvm
+          sudo docker image prune -a --force || true
+          sudo docker system prune -a --volumes --force || true
           sudo apt-get clean
-          sudo docker system prune -af || true
+          df -h
 
       - name: Install Dependencies
         run: |
